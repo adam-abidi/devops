@@ -10,8 +10,7 @@ pipeline {
         stage('GIT') {
             steps {
                 git branch: 'adem',
-                    url: 'https://github.com/adam-abidi/devops.git',
-                    
+                    url: 'https://github.com/adam-abidi/devops.git'
             }
         }
 
@@ -32,9 +31,6 @@ pipeline {
                 sh 'mvn package -DskipTests'
             }
         }
-
-        
-
     }
 
     post {
