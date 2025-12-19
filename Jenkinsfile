@@ -67,6 +67,45 @@ pipeline {
                 '''
             }
         }
+
+        stage('GIT KUBERNETES MANIFESTS') {
+            steps {
+                dir('k8s-repo') {
+                    git branch: 'master',
+                        url: 'https://github.com/NadineMili/student-management-devops.git'
+                }
+            }
+        }
+
+        
+        stage('KUBERNETES DEPLOY') {
+            steps {
+                sh '''
+                echo "===== Kubernetes Deployment ====="
+                kubectl get nodes
+
+                kubectl apply -f k8s-repo/student-man-main/k8s/
+
+                kubectl get pods -n devops
+                kubectl get svc -n devops
+                '''
+            }
+        }
+
+        / =======================
+           API REST
+        ======================= */
+        stage('CREATE DEPARTMENT') {
+            steps {
+                sh '''
+                echo "===== Creating Department via REST API ====="
+                sleep 20
+                curl -X POST http://192.168.49.2:32639/department/createDepartment \
+                     -H "Content-Type: application/json" \
+                     -d '{"name": "Finance", "location": "Sfax"}'
+                '''
+            }
+        }
         
     }
 
