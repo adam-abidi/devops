@@ -31,8 +31,7 @@ pipeline {
                 sh 'mvn package -DskipTests'
             }
         }
-        
-        
+
         stage('MVN SONARQUBE') {
             steps {
                 withSonarQubeEnv('sonarqube') {
@@ -44,13 +43,8 @@ pipeline {
         stage('Docker Cleanup & Build') {
             steps {
                 sh '''
-                # Supprimer containers existants si ils existent
                 docker rm -f tp-foyer-container tp-foyer-mysql || true
-                
-                # Supprimer l'ancienne image si elle existe
                 docker rmi -f tp-foyer-app:1.0 || true
-
-                # Build de la nouvelle image
                 docker build -t tp-foyer-app:1.0 .
                 '''
             }
@@ -59,10 +53,7 @@ pipeline {
         stage('Docker Compose Up') {
             steps {
                 sh '''
-                # Supprimer containers et réseaux orphelins
                 docker-compose down --remove-orphans
-
-                # Lancer les services
                 docker-compose up -d --build
                 '''
             }
@@ -77,24 +68,22 @@ pipeline {
             }
         }
 
-        
         stage('KUBERNETES DEPLOY') {
             steps {
                 sh '''
                 echo "===== Kubernetes Deployment ====="
                 kubectl get nodes
-
                 kubectl apply -f k8s-repo/student-man-main/k8s/
-
                 kubectl get pods -n devops
                 kubectl get svc -n devops
                 '''
             }
         }
 
-        / =======================
+        /* =======================
            API REST
-        ======================= */
+           ======================= */
+
         stage('CREATE DEPARTMENT') {
             steps {
                 sh '''
@@ -106,7 +95,6 @@ pipeline {
                 '''
             }
         }
-        
     }
 
     post {
