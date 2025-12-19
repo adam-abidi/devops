@@ -91,7 +91,7 @@ pipeline {
                 sleep 20
                 curl -X POST http://192.168.49.2:32639/department/createDepartment \
                      -H "Content-Type: application/json" \
-                     -d '{"name": "Finance", "location": "Sfax"}'
+                     -d '{"name": "IA", "location": "BOUZID"}'
                 '''
             }
         }
